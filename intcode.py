@@ -3,6 +3,9 @@ from enum import IntEnum
 
 
 class Op(IntEnum):
+    """
+    For readability's sake
+    """
     ADD = 1
     MUL = 2
     INPUT = 3
@@ -14,6 +17,7 @@ class Op(IntEnum):
     DONE = 99
 
 
+# These are the ops for which the last parameter is always in position mode
 writers = [
     Op.ADD,
     Op.MUL,
@@ -24,6 +28,13 @@ writers = [
 
 
 class ListPrinter(object):
+    """
+    Helper class to allow us to use `print` function for opcode 4 to write to a list
+
+    This is mostly helpful because my input for Day 5, part 1 spit out a bunch of zeroes,
+    so this is a way to suppress those and just look at the final thing printed.
+    """
+
     def __init__(self, buf):
         """
         :param list buf: The object to add to
