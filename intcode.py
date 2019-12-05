@@ -1,3 +1,4 @@
+import sys
 from enum import IntEnum
 
 
@@ -22,8 +23,22 @@ writers = [
 ]
 
 
-def run(program, input=None):
+class ListPrinter(object):
+    def __init__(self, buf):
+        """
+        :param list buf: The object to add to
+        """
+        self.buf = buf
+
+    def write(self, s):
+        if s.strip():
+            self.buf.append(s)
+
+
+def run(program, input=None, buffer=sys.stdout):
     ip = 0
+    if isinstance(buffer, list):
+        buffer = ListPrinter(buffer)
 
     def get_args(nargs):
         nonlocal ip
@@ -60,8 +75,7 @@ def run(program, input=None):
             ip += 2
         elif opcode == Op.PRINT:
             value, = get_args(1)
-            if value != 0:
-                print(value)
+            print(value, file=buffer)
             ip += 2
         elif opcode == Op.JUMP_IF_TRUE:
             check, new_ip = get_args(2)
