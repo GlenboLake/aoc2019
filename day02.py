@@ -1,3 +1,5 @@
+from intcode import run
+
 with open('input/day02.txt') as f:
     ints = list(map(int, f.read().split(',')))
 
@@ -6,20 +8,7 @@ def run_prog(noun, verb):
     nums = ints.copy()
     nums[1] = noun
     nums[2] = verb
-    pos = 0
-    while True:
-        op = nums[pos]
-        if op == 99:
-            break
-        a, b, res = nums[pos + 1:pos + 4]
-        if op == 1:
-            result = nums[a] + nums[b]
-        elif op == 2:
-            result = nums[a] * nums[b]
-        else:
-            break
-        nums[res] = result
-        pos += 4
+    run(nums)
     return nums[0]
 
 
