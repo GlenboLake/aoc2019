@@ -9,7 +9,7 @@ with open('input/day07.txt') as f:
 def part1(phases):
     value = 0
     for phase in phases:
-        value = next(run(prog[:], iter((phase, value))))
+        value = next(run(prog[:], (phase, value)))
     return value
 
 

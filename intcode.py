@@ -1,4 +1,4 @@
-import sys
+from collections import Iterator
 from enum import IntEnum
 
 
@@ -35,6 +35,8 @@ writers = [
 
 
 def run(program, inp):
+    if not isinstance(inp, Iterator):
+        inp = iter(inp)
     program.extend([0] * 10000)
     ip = 0
     base = 0
