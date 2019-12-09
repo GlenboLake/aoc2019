@@ -5,14 +5,36 @@ from intcode import run
 with open('input/day07.txt') as f:
     prog = list(map(int, f.read().strip().split(',')))
 
-inputs = list(permutations(range(5), 5))
 
-demo = [3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0]
-best = 0
-
-for seq in inputs:
+def part1(phases):
     value = 0
-    for amp in seq:
-        value = next(run(prog, iter((amp, value))))
-    best = max(best, value)
-print('Part 1:', best)
+    for phase in phases:
+        value = next(run(prog[:], iter((phase, value))))
+    return value
+
+
+print('Part 1:', max(part1(seq) for seq in permutations(range(5), 5)))
+
+
+# Based heavily on the submission by dries007
+# https://www.reddit.com/r/adventofcode/comments/e7a4nj/2019_day_7_solutions/f9y0yw6/
+def part2(phases):
+    feedback = None
+
+    def amp_input(amp):
+        yield phases[amp]
+
+        if amp == 0:
+            yield 0
+            while True:
+                yield feedback
+
+        yield from run(prog[:], amp_input(amp - 1))
+
+    amps = run(prog[:], amp_input(len(phases) - 1))
+    for feedback in amps:
+        pass
+    return feedback
+
+
+print('Part 2:', max(part2(seq) for seq in permutations(range(5, 10), 5)))
