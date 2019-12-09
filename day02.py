@@ -8,7 +8,7 @@ def run_prog(noun, verb):
     nums = ints.copy()
     nums[1] = noun
     nums[2] = verb
-    run(nums)
+    list(run(nums, None))
     return nums[0]
 
 

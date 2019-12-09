@@ -43,29 +43,33 @@ class ListPrinter(object):
 
     def write(self, s):
         if s.strip():
-            self.buf.append(s)
+            try:
+                self.buf.append(int(s))
+            except:
+                self.buf.append(s)
 
 
-def run(program, input=None, buffer=sys.stdout):
-    ip = 0
-    if isinstance(buffer, list):
-        buffer = ListPrinter(buffer)
+# def process_opcode(program, ip)
 
-    def get_args(nargs):
-        nonlocal ip
-        modes = program[ip] // 100
-        args = []
-        for i in range(1, nargs):
-            arg = program[ip + i]
-            if modes % 10 == 0:
-                arg = program[arg]
-            modes //= 10
-            args.append(arg)
-        arg = program[ip + nargs]
-        if Op(program[ip] % 100) not in writers and modes % 10 == 0:
+
+def get_args(program, ip, nargs):
+    modes = program[ip] // 100
+    args = []
+    for i in range(1, nargs):
+        arg = program[ip + i]
+        if modes % 10 == 0:
             arg = program[arg]
+        modes //= 10
         args.append(arg)
-        return args
+    arg = program[ip + nargs]
+    if Op(program[ip] % 100) not in writers and modes % 10 == 0:
+        arg = program[arg]
+    args.append(arg)
+    return args
+
+
+def run(program, inp):
+    ip = 0
 
     while True:
         opcode = Op(program[ip] % 100)
@@ -73,39 +77,39 @@ def run(program, input=None, buffer=sys.stdout):
         if opcode == Op.DONE:
             break
         elif opcode == Op.ADD:
-            a, b, dst = get_args(3)
+            a, b, dst = get_args(program, ip, 3)
             program[dst] = a + b
             ip += 4
         elif opcode == Op.MUL:
-            a, b, dst = get_args(3)
+            a, b, dst = get_args(program, ip, 3)
             program[dst] = a * b
             ip += 4
         elif opcode == Op.INPUT:
-            dst, = get_args(1)
-            program[dst] = input
+            dst, = get_args(program, ip, 1)
+            program[dst] = next(inp)
             ip += 2
         elif opcode == Op.PRINT:
-            value, = get_args(1)
-            print(value, file=buffer)
+            value, = get_args(program, ip, 1)
+            yield value
             ip += 2
         elif opcode == Op.JUMP_IF_TRUE:
-            check, new_ip = get_args(2)
+            check, new_ip = get_args(program, ip, 2)
             if check:
                 ip = new_ip
             else:
                 ip += 3
         elif opcode == Op.JUMP_IF_FALSE:
-            check, new_ip = get_args(2)
+            check, new_ip = get_args(program, ip, 2)
             if not check:
                 ip = new_ip
             else:
                 ip += 3
         elif opcode == Op.LESS_THAN:
-            a, b, res = get_args(3)
+            a, b, res = get_args(program, ip, 3)
             program[res] = int(a < b)
             ip += 4
         elif opcode == Op.EQUAL:
-            a, b, res = get_args(3)
+            a, b, res = get_args(program, ip, 3)
             program[res] = int(a == b)
             ip += 4
         else:
