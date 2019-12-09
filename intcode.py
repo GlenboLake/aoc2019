@@ -14,10 +14,17 @@ class Op(IntEnum):
     JUMP_IF_FALSE = 6
     LESS_THAN = 7
     EQUAL = 8
+    BASE = 9
     DONE = 99
 
 
-# These are the ops for which the last parameter is always in position mode
+class Mode(IntEnum):
+    POSITION = 0
+    IMMEDIATE = 1
+    RELATIVE = 2
+
+
+# These are the ops for which the last parameter is never in immediate mode (1)
 writers = [
     Op.ADD,
     Op.MUL,
@@ -28,21 +35,26 @@ writers = [
 
 
 def run(program, inp):
+    program.extend([0] * 10000)
     ip = 0
+    base = 0
 
     def get_args(nargs):
+        op = Op(program[ip] % 100)
         modes = program[ip] // 100
         args = []
-        for i in range(1, nargs):
+        for i in range(1, nargs+1):
             arg = program[ip + i]
-            if modes % 10 == 0:
-                arg = program[arg]
+            mode = Mode(modes%10)
             modes //= 10
+            if i < nargs or op not in writers:
+                if mode == Mode.POSITION:
+                    arg = program[arg]
+                elif mode == Mode.RELATIVE:
+                    arg = program[arg + base]
+            elif mode == Mode.RELATIVE:
+                arg += base
             args.append(arg)
-        arg = program[ip + nargs]
-        if Op(program[ip] % 100) not in writers and modes % 10 == 0:
-            arg = program[arg]
-        args.append(arg)
         return args
 
     while True:
@@ -86,5 +98,9 @@ def run(program, inp):
             a, b, res = get_args(3)
             program[res] = int(a == b)
             ip += 4
+        elif opcode == Op.BASE:
+            adj, = get_args(1)
+            base += adj
+            ip += 2
         else:
             raise NotImplementedError
