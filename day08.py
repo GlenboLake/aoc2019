@@ -1,4 +1,4 @@
-from PIL import Image
+from util import ocr
 
 width, height = 25, 6
 
@@ -17,16 +17,17 @@ zeros_layer = min(layers, key=lambda lay: lay.count(0))
 
 print(zeros_layer.count(1) * zeros_layer.count(2))
 
-img = Image.new(mode='1', size=(width, height))
+d = {}
+
+for layer in reversed(layers):
+    d.update({(i % width, i // width): v for i, v in enumerate(layer) if v != 2})
 
 for row in range(height):
     for col in range(width):
         pixels = [layer.pop(0) for layer in layers]
         for x in pixels:
-            if x == 0:
-                img.putpixel((col, row), 0)
+            if x != 2:
+                d[col, row] = x
                 break
-            elif x == 1:
-                img.putpixel((col, row), 1)
-                break
-img.show()
+
+print(ocr(d))

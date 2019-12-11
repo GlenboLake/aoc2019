@@ -1,7 +1,5 @@
-from collections import defaultdict
-
 from intcode import run
-from util import show_dict
+from util import normalize_dict, ocr
 
 with open('input/day11.txt') as f:
     data = list(map(int, f.read().split(',')))
@@ -15,7 +13,7 @@ def solve(part):
     panels = {}
     if part == 2:
         panels[0, 0] = WHITE
-    robot_runner = run(data[:], iter(inputs))
+    robot_runner = run(data[:], inputs)
     x, y = 0, 0
 
     d = 0
@@ -41,5 +39,4 @@ def solve(part):
 
 
 print('part 1:', len(solve(1)))
-
-show_dict(solve(2))
+print('part 2:', ocr(normalize_dict(solve(2))))
