@@ -1,4 +1,7 @@
+from functools import reduce
+
 from PIL import Image
+from math import gcd
 
 
 def normalize_dict(d):
@@ -75,3 +78,7 @@ def ocr(d):
             print(letter)
 
     return result
+
+
+def lcm(*nums):
+    return reduce(lambda a, b: a * b // gcd(a, b), nums, 1)
