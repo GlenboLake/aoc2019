@@ -1,14 +1,13 @@
-from intcode import run
+from intcode import run, load
 
-with open('input/day02.txt') as f:
-    ints = list(map(int, f.read().split(',')))
+ints = load(2)
 
 
 def run_prog(noun, verb):
     nums = ints.copy()
     nums[1] = noun
     nums[2] = verb
-    list(run(nums, None))
+    list(run(nums, []))
     return nums[0]
 
 

@@ -1,7 +1,6 @@
-from intcode import run
+from intcode import run, load
 
-with open('input/day05.txt') as f:
-    ints = list(map(int, f.read().split(',')))
+ints = load(5)
 
 output = []
 part_1 = run(ints[:], [1])

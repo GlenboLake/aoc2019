@@ -1,9 +1,8 @@
 from enum import IntEnum
 
-from intcode import run
+from intcode import load, run
 
-with open('input/day13.txt') as f:
-    program = list(map(int, f.read().split(',')))
+program = load(13)
 
 runner = run(program[:], [])
 

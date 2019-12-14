@@ -2,6 +2,11 @@ from collections import Iterator
 from enum import IntEnum
 
 
+def load(day):
+    with open(f'input/day{day:02}.txt') as f:
+        return list(map(int, f.read().split(',')))
+
+
 class Op(IntEnum):
     """
     For readability's sake

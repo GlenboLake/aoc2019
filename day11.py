@@ -1,8 +1,7 @@
-from intcode import run
+from intcode import load, run
 from util import normalize_dict, ocr
 
-with open('input/day11.txt') as f:
-    data = list(map(int, f.read().split(',')))
+data = load(11)
 
 BLACK = 0
 WHITE = 1

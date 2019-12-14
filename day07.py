@@ -1,9 +1,8 @@
 from itertools import permutations
 
-from intcode import run
+from intcode import load, run
 
-with open('input/day07.txt') as f:
-    prog = list(map(int, f.read().strip().split(',')))
+prog = load(7)
 
 
 def part1(phases):
