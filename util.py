@@ -38,7 +38,7 @@ def dict_str(d):
     s = ''
     for row in range(height):
         for col in range(width):
-            s += '#' if d.get((col, row), 0) else ' '
+            s += '#' if d.get((col, row), 0) else '.'
         s += '\n'
     return s
 
@@ -82,3 +82,16 @@ def ocr(d):
 
 def lcm(*nums):
     return reduce(lambda a, b: a * b // gcd(a, b), nums, 1)
+
+
+def memoize(func):
+    cache = dict()
+
+    def memoized_func(*args):
+        if args in cache:
+            return cache[args]
+        result = func(*args)
+        cache[args] = result
+        return result
+
+    return memoized_func
