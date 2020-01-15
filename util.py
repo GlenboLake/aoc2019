@@ -61,7 +61,7 @@ _alphabet = {_extract_letter(i): letter for i, letter in enumerate(_known)}
 
 
 def ocr(d):
-    s = dict_str(d).splitlines()
+    s = dict_str(d).replace('.', ' ').splitlines()
     width = len(s[0])
     offset = 0
     for offset in range(width):
