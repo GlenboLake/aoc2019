@@ -40,7 +40,7 @@ writers = [
 
 
 def run(program, inp):
-    if not isinstance(inp, Iterator):
+    if not hasattr(inp, '__next__'):
         inp = iter(inp)
     program.extend([0] * 10000)
     ip = 0
